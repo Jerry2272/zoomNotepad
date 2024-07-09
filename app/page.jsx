@@ -3,37 +3,25 @@
 import { useState, useEffect } from 'react';
 import EditableLine from './component/EditableLine';
 import { TodoList } from './todoList/TodoList';
+import useLocalStorage from './hook/useLocalStorage';
 
 function Home() {
   const [type, setType] = useState('');
   const [theme, setTheme] = useState('light');
   const [displayNotepad, setDisplayNotepad] = useState(false);
   const [displayTodoList, setDisplayTodoList] = useState(false);
-  const [lines, setLines] = useState(() => {
-    const savedLines = localStorage.getItem('saveText');
-    try {
-      return savedLines ? JSON.parse(savedLines) : [];
-    } catch (e) {
-      console.error('Error parsing saveText from localStorage:', e);
-      return [];
-    }
-  });
+  const [lines, setLines] = useLocalStorage('saveText', []);
 
   const handleAddLine = (e) => {
     e.preventDefault();
-    if (type === '') {
+    if (type.trim() === '') {
       alert('Input text box is empty');
     } else {
       const newLines = [...lines, type];
       setLines(newLines);
       setType('');
-      localStorage.setItem('saveText', JSON.stringify(newLines));
     }
   };
-
-  useEffect(() => {
-    localStorage.setItem('saveText', JSON.stringify(lines));
-  }, [lines]);
 
   const handleSaveLine = (index, newText) => {
     const updatedLines = lines.map((line, i) => (i === index ? newText : line));
@@ -44,7 +32,6 @@ function Home() {
     const updatedLines = [...lines];
     updatedLines.splice(index, 1);
     setLines(updatedLines);
-    localStorage.setItem('saveText', JSON.stringify(updatedLines));
   };
 
   const toggleNotepad = () => {
