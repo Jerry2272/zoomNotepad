@@ -113,6 +113,7 @@ function SignUp() {
                 <button>Continue with Github</button>
                 <button>Continue with Facebook</button>
                 <button>Continue with Github</button>
+                <button>Continue with Github</button>
                 </div>
                 
             </form>
