@@ -40,7 +40,7 @@ function Login() {
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated === false) {
+    if (!isAuthenticated) {
       router.push('/login');
     }
   }, [isAuthenticated, router]);
@@ -104,7 +104,7 @@ function Login() {
   return (
     <main className={`theme-${theme} homePage flex flex-col px-[2em]`} style={{ height: '100vh' }}>
       <button onClick={logOut} className='fixed bottom-[2em] right-[30px]'>LogOut</button>
-      <button onClick={toggleTheme} className='absolute  right-0'>
+      <button onClick={toggleTheme} className='absolute right-0'>
         {theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
       </button>
       <div className='pt-[2em]'>
