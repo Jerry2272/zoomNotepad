@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import EditableLine from '../component/EditableLine';
 import { TodoList } from '../todoList/TodoList';
 import useLocalStorage from '../hook/useLocalStorage';
 import { auth, db } from '../firebase/Firebase';
 import { addDoc, collection } from 'firebase/firestore';
-import { useRouter }  from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -15,9 +15,9 @@ import useAuth from '../hook/useAuth';
 
 const modules = {
   toolbar: [
-    [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
     ['link', 'image'],
     [{ 'color': [] }, { 'background': [] }],
     ['clean']
@@ -32,39 +32,43 @@ function Login() {
   const [lines, setLines] = useLocalStorage('saveText', []);
   const isAuthenticated = useAuth();
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
 
-    if(isAuthenticated === false) {
-      router.push('/login')
- return     <div className='text-3xl'>
-          You are not yet Authenticated 
-        </div>
+  // Ensure the code is only run on the client
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      router.push('/login');
     }
+  }, [isAuthenticated, router]);
 
- 
-  const logOut = () =>{
-      signOut(auth)
+  const logOut = () => {
+    signOut(auth)
       .then(() => {
         alert(`Logout Successful`);
-          window.location.href = '/'
-    })
-    .catch((error) => {
+        window.location.href = '/';
+      })
+      .catch((error) => {
         alert(`Error: ${error.message}`);
-    });
+      });
   };
 
   const handleAddLine = async (e) => {
     e.preventDefault();
     const addDocs = collection(db, 'notes');
-    
+
     if (type.trim() === '') {
       alert('Input text box is empty');
       return;
     }
-    
+
     const newLines = [...lines, type];
     setLines(newLines);
     setType('');
-    
+
     try {
       await addDoc(addDocs, { lines: newLines });
       console.log("Document successfully written!");
@@ -104,16 +108,17 @@ function Login() {
         {theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
       </button>
       <div className='pt-[2em]'>
-      <h2 className='lg:text-4xl py-10 uppercase text-center'>Welcome to your <i>zoomNote</i></h2>
-      <div className="flex justify-between my-2 px-[2em] text-center bg-slate-900 py-[4em] rounded-[40px] shadow-black items-center gap-[50px]">
-        <button className="bg-slate-700 py-8 px-8 w-[40%] text-white" onClick={toggleNotepad}>
-          {displayNotepad ? 'Close Notepad' : 'Open Notepad'}
-        </button>
-        <button className="bg-slate-700 py-8 px-8 w-[40%] text-white" onClick={toggleTodoList}>
-          {displayTodoList ? 'Close Todo List' : 'Open Todo List'}
-        </button>
+        <h2 className='lg:text-4xl py-10 uppercase text-center'>Welcome to your <i>zoomNote</i></h2>
+        <div className="flex justify-between my-2 px-[2em] text-center bg-slate-900 py-[4em] rounded-[40px] shadow-black items-center gap-[50px]">
+          <button className="bg-slate-700 py-8 px-8 w-[40%] text-white" onClick={toggleNotepad}>
+            {displayNotepad ? 'Close Notepad' : 'Open Notepad'}
+          </button>
+          <button className="bg-slate-700 py-8 px-8 w-[40%] text-white" onClick={toggleTodoList}>
+            {displayTodoList ? 'Close Todo List' : 'Open Todo List'}
+          </button>
+        </div>
       </div>
-      </div>
+
       {displayNotepad && (
         <form>
           <div className='text-white'>
@@ -127,18 +132,21 @@ function Login() {
               />
             ))}
           </div>
-          <div className="inputForm flex flex-col text-white" >
-            <ReactQuill
-              modules={modules}
-              value={type}
-              onChange={setType}
-              className="w-full h-[80vh] bg-slate-900 text-white my-10"
-              placeholder="Add New Note Here"
-            />
-            <button onClick={handleAddLine} className="bg-zinc-900 py-3 text-white px-7 rounded">
-              Save Note 
-            </button>
-          </div>
+
+          {isClient && (
+            <div className="inputForm flex flex-col text-white">
+              <ReactQuill
+                modules={modules}
+                value={type}
+                onChange={setType}
+                className="w-full h-[80vh] bg-slate-900 text-white my-10"
+                placeholder="Add New Note Here"
+              />
+              <button onClick={handleAddLine} className="bg-zinc-900 py-3 text-white px-7 rounded">
+                Save Note 
+              </button>
+            </div>
+          )}
         </form>
       )}
       {displayTodoList && <TodoList />}
