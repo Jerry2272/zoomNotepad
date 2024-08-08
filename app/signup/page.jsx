@@ -13,7 +13,7 @@ function SignUp() {
         signInWithPopup(auth, googleAuth)
             .then((result) => {
                 alert(`SignUp Successful: ${result.user.email}`);
-                 window.location.href = '/homePage'
+                 window.location.href = '/homepage'
             })
             .catch((error) => {
                 alert(`Error: ${error.message}`);

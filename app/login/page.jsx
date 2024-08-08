@@ -11,7 +11,7 @@ function Login() {
         signInWithPopup(auth, googleAuth)
             .then((result) => {
                 alert(`Login Successful: ${result.user.email}`);
-                  window.location.href = '/homePage'
+                  window.location.href = '/homepage'
             })
             .catch((error) => {
                 alert(`Error: ${error.message}`);
@@ -23,7 +23,7 @@ function Login() {
         signInWithEmailAndPassword(auth, email, pwd)
             .then((res) => {
                 alert(`Login Successful: ${res.user.email}`);
-                window.location.href = '/homePage'
+                window.location.href = '/homepage'
             })
             .catch((error) => {
                 console.error(error);
