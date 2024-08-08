@@ -1,94 +1,14 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import EditableLine from './component/EditableLine';
-import { TodoList } from './todoList/TodoList';
-import useLocalStorage from './hook/useLocalStorage';
 
 function Home() {
-  const [type, setType] = useState('');
-  const [theme, setTheme] = useState('light');
-  const [displayNotepad, setDisplayNotepad] = useState(false);
-  const [displayTodoList, setDisplayTodoList] = useState(false);
-  const [lines, setLines] = useLocalStorage('saveText', []);
-
-  const handleAddLine = (e) => {
-    e.preventDefault();
-    if (type.trim() === '') {
-      alert('Input text box is empty');
-    } else {
-      const newLines = [...lines, type];
-      setLines(newLines);
-      setType('');
-    }
-  };
-
-  const handleSaveLine = (index, newText) => {
-    const updatedLines = lines.map((line, i) => (i === index ? newText : line));
-    setLines(updatedLines);
-  };
-
-  const handleDeleteLine = (index) => {
-    const updatedLines = [...lines];
-    updatedLines.splice(index, 1);
-    setLines(updatedLines);
-  };
-
-  const toggleNotepad = () => {
-    setDisplayNotepad(!displayNotepad);
-  };
-
-  const toggleTodoList = () => {
-    setDisplayTodoList(!displayTodoList);
-  };
-
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
-  };
-
   return (
-    <main className={`theme-${theme}`} style={{ height: '100vh' }}>
-      <button onClick={toggleTheme}>
-        {theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
-      </button>
-      <h2>Welcome to your Notepad</h2>
-      <div className="flex justify-between">
-        <button className="bg-[#1d1a1a] py-8 px-8 w-[40%] text-white" onClick={toggleNotepad}>
-          {displayNotepad ? 'Close Notepad' : 'Open Notepad'}
-        </button>
-        <button className="bg-[#1d1a1a] py-8 px-8 w-[40%] text-white" onClick={toggleTodoList}>
-          {displayTodoList ? 'Close Todo List' : 'Open Todo List'}
-        </button>
+    <div className="h-[100vh] text-white bg-slate-950 flex flex-col gap-y-16 justify-center items-center">
+      <h2 className="text-6xl font-[600] relative z-[1] text-center">Get Started with zoomNote</h2>
+      <input type="text" className="zoomInput shadow block w-full input bg-slate-700 py-3 px-5" disabled />
+      <div className="flex gap-y-4 lg:flex-row flex-col">
+        <a href="/login" className="bg-slate-700 px-8 py-4 w-auto text-center">Already have an account?</a>
+        <a href="/signup" className="bg-slate-700 px-8 py-4 w-auto text-center">Sign Up</a>
       </div>
-      {displayNotepad && (
-        <form>
-          <div>
-            {lines.map((line, index) => (
-              <EditableLine
-                key={index}
-                index={index}
-                text={line}
-                onSave={handleSaveLine}
-                onDelete={handleDeleteLine}
-              />
-            ))}
-          </div>
-          <div className="inputForm">
-            <textarea
-              name="textarea"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="w-full h-[80vh] shadow px-20 my-10"
-              placeholder="Add New Note"
-            />
-            <button onClick={handleAddLine} className="bg-zinc-700 py-3 px-7">
-              Save Note
-            </button>
-          </div>
-        </form>
-      )}
-      {displayTodoList && <TodoList />}
-    </main>
+    </div>
   );
 }
 
