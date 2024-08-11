@@ -22,13 +22,6 @@
     text-wrap: balance;
   }
 }
-
-
-/* homepage styles  */
-.homePage {
- 
-}
-
 /* Change the toolbar background to white */
 .ql-toolbar {
   background-color: white !important;
@@ -68,7 +61,7 @@
 }
 
 .theme-dark {
-  background-color: black;
+  background-color:u black;
   color: white;
 }
 
