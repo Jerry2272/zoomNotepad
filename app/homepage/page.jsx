@@ -1,3 +1,5 @@
+
+// pages/login.js (Login Component)
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -34,7 +36,6 @@ function Login() {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
 
-  // Ensure the code is only run on the client
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -48,8 +49,8 @@ function Login() {
   const logOut = () => {
     signOut(auth)
       .then(() => {
-        alert(`Logout Successful`);
-        window.location.href = '/';
+        alert('Logout Successful');
+        router.push('/');
       })
       .catch((error) => {
         alert(`Error: ${error.message}`);
@@ -74,7 +75,7 @@ function Login() {
       console.log("Document successfully written!");
     } catch (error) {
       console.error('Error adding document: ', error.message);
-      alert('Watch out for errors');
+      alert('Error adding note. Please try again.');
     }
   };
 
