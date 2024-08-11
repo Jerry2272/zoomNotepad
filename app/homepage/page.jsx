@@ -1,5 +1,3 @@
-
-// pages/login.js (Login Component)
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -9,7 +7,6 @@ import useLocalStorage from '../hook/useLocalStorage';
 import { auth, db } from '../firebase/Firebase';
 import { addDoc, collection } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
-
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { signOut } from 'firebase/auth';
